@@ -346,13 +346,19 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscurePassword ? Icons.visibility : Icons.visibility_off,
-                            color: Colors.white70,
+                            color: const Color(0xFFFFFFFF),
+                            size: 20,
                           ),
                           onPressed: () {
                             setState(() {
                               _obscurePassword = !_obscurePassword;
                             });
                           },
+                          style: IconButton.styleFrom(
+                            foregroundColor: const Color(0xFFFFFFFF),
+                            backgroundColor: Colors.transparent,
+                            padding: const EdgeInsets.all(8),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
@@ -367,13 +373,19 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         suffixIcon: IconButton(
                           icon: Icon(
                             _obscureConfirmPassword ? Icons.visibility : Icons.visibility_off,
-                            color: Colors.white70,
+                            color: const Color(0xFFFFFFFF),
+                            size: 20,
                           ),
                           onPressed: () {
                             setState(() {
                               _obscureConfirmPassword = !_obscureConfirmPassword;
                             });
                           },
+                          style: IconButton.styleFrom(
+                            foregroundColor: const Color(0xFFFFFFFF),
+                            backgroundColor: Colors.transparent,
+                            padding: const EdgeInsets.all(8),
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),

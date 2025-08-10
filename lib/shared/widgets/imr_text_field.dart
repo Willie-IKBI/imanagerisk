@@ -114,8 +114,28 @@ class IMRTextField extends StatelessWidget {
           fontWeight: FontWeight.w400,
           color: Color(0x99FFFFFF),
         ),
-        suffixIcon: suffixIcon,
-        prefixIcon: prefixIcon,
+        suffixIcon: suffixIcon != null
+            ? Theme(
+                data: Theme.of(context).copyWith(
+                  iconTheme: const IconThemeData(
+                    color: Color(0xFFFFFFFF),
+                    size: 20,
+                  ),
+                ),
+                child: suffixIcon!,
+              )
+            : null,
+        prefixIcon: prefixIcon != null
+            ? Theme(
+                data: Theme.of(context).copyWith(
+                  iconTheme: const IconThemeData(
+                    color: Color(0xFFFFFFFF),
+                    size: 20,
+                  ),
+                ),
+                child: prefixIcon!,
+              )
+            : null,
       ),
     );
   }
