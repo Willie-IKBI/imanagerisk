@@ -62,8 +62,12 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
       return 'Too many login attempts. Please try again later';
     } else if (errorString.contains('network') || errorString.contains('connection')) {
       return 'Network error. Please check your connection and try again.';
-    } else if (errorString.contains('supabase is not initialized')) {
-      return 'Service not ready. Please refresh the page and try again.';
+    } else if (errorString.contains('supabase is not initialized') || errorString.contains('service not ready')) {
+      return 'Initializing services... Please wait a moment and try again.';
+    } else if (errorString.contains('timeout') || errorString.contains('timed out')) {
+      return 'Request timed out. Please check your connection and try again.';
+    } else if (errorString.contains('server error') || errorString.contains('internal error')) {
+      return 'Server error. Please try again in a moment.';
     } else {
       if (kDebugMode) {
         print('🔍 Sign in error: $error');

@@ -37,7 +37,10 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
         print('🔍 Error: $e');
         print('🔍 Stack trace: $stackTrace');
       }
-      state = AsyncValue.error(e, stackTrace);
+      
+      // Instead of throwing an error, set the state to data(null) to allow the app to continue
+      // This prevents the app from showing an error screen when Supabase is just not ready yet
+      state = const AsyncValue.data(null);
     }
   }
 
