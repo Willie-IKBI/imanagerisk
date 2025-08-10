@@ -4,7 +4,6 @@ import 'package:flutter/foundation.dart';
 class EnvConfig {
   static const String _supabaseUrlKey = 'SUPABASE_URL';
   static const String _supabaseAnonKeyKey = 'SUPABASE_ANON_KEY';
-  static const String _supabaseServiceKeyKey = 'SUPABASE_SERVICE_KEY';
   
   // Supabase Configuration
   static String get supabaseUrl {
@@ -33,18 +32,9 @@ class EnvConfig {
     throw Exception('SUPABASE_ANON_KEY environment variable is required in production');
   }
 
-  static String get supabaseServiceKey {
-    // Try to get from environment variable first, fallback to hardcoded for development
-    const envKey = String.fromEnvironment('SUPABASE_SERVICE_KEY');
-    if (envKey.isNotEmpty) {
-      return envKey;
-    }
-    // Fallback for development only
-    if (kDebugMode) {
-      return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDczMjMwNywiZXhwIjoyMDcwMzA4MzA3fQ.0eg-XYAnuIjxhXvI6YL4pg-i4X4ihtSW2PgSmeoiXVw';
-    }
-    throw Exception('SUPABASE_SERVICE_KEY environment variable is required in production');
-  }
+  // Service Role Key - REMOVED from client-side code for security
+  // Service role keys should ONLY be used in server-side applications
+  // and should NEVER be exposed in client-side code or repositories
 
   // Environment detection
   static bool get isDevelopment => kDebugMode;
@@ -111,7 +101,6 @@ class EnvConfig {
     return {
       'SUPABASE_URL': supabaseUrl,
       'SUPABASE_ANON_KEY': supabaseAnonKey,
-      'SUPABASE_SERVICE_KEY': supabaseServiceKey,
       'ENVIRONMENT': isDevelopment ? 'development' : 'production',
       'APP_NAME': appName,
       'APP_VERSION': appVersion,
