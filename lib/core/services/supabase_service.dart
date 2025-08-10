@@ -13,8 +13,8 @@ class SupabaseService {
     try {
       // Try to access the client - if it throws an exception, it's not initialized
       final client = Supabase.instance.client;
-      // Additional check to ensure the client is properly configured
-      return client.supabaseUrl.isNotEmpty && client.supabaseKey.isNotEmpty;
+      // Simple check to ensure the client is accessible
+      return client != null;
     } catch (e) {
       return false;
     }
