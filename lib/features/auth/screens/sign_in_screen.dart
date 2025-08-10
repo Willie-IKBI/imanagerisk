@@ -4,6 +4,7 @@ import '../../../theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../controllers/auth_controller.dart';
 import 'sign_up_screen.dart';
+import 'package:flutter/foundation.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
   const SignInScreen({super.key});
@@ -51,13 +52,22 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
   }
 
   String _getErrorMessage(dynamic error) {
-    if (error.toString().contains('Invalid login credentials')) {
+    final errorString = error.toString().toLowerCase();
+    
+    if (errorString.contains('invalid login credentials') || errorString.contains('invalid credentials')) {
       return 'Invalid email or password';
-    } else if (error.toString().contains('Email not confirmed')) {
-      return 'Please check your email and confirm your account';
-    } else if (error.toString().contains('Too many requests')) {
+    } else if (errorString.contains('email not confirmed') || errorString.contains('email confirmation')) {
+      return 'Please check your email and confirm your account before signing in';
+    } else if (errorString.contains('too many requests') || errorString.contains('rate limit')) {
       return 'Too many login attempts. Please try again later';
+    } else if (errorString.contains('network') || errorString.contains('connection')) {
+      return 'Network error. Please check your connection and try again.';
+    } else if (errorString.contains('supabase is not initialized')) {
+      return 'Service not ready. Please refresh the page and try again.';
     } else {
+      if (kDebugMode) {
+        print('🔍 Sign in error: $error');
+      }
       return 'Sign in failed. Please try again.';
     }
   }

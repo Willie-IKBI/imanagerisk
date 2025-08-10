@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../controllers/auth_controller.dart';
+import 'package:flutter/foundation.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
   const SignUpScreen({super.key});
@@ -47,6 +48,13 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     }
 
     try {
+      if (kDebugMode) {
+        print('🔐 Starting sign up process...');
+        print('📧 Email: ${_emailController.text.trim()}');
+        print('👤 First Name: ${_firstNameController.text.trim()}');
+        print('👤 Last Name: ${_lastNameController.text.trim()}');
+      }
+
       await ref.read(authControllerProvider.notifier).signUp(
         email: _emailController.text.trim(),
         password: _passwordController.text,
@@ -55,16 +63,33 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       );
       
       // If successful, show email verification screen
-      setState(() {
-        _showEmailVerification = true;
-      });
+      if (mounted) {
+        setState(() {
+          _showEmailVerification = true;
+        });
+        
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Account created successfully! Please check your email for verification before signing in.'),
+            backgroundColor: Color(0xFF2E7D32),
+            duration: Duration(seconds: 5),
+          ),
+        );
+      }
     } catch (e) {
+      if (kDebugMode) {
+        print('❌ Sign up failed with error: $e');
+        print('🔍 Error type: ${e.runtimeType}');
+      }
+      
       // Show error message
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(_getErrorMessage(e)),
             backgroundColor: const Color(0xFFD32F2F),
+            duration: const Duration(seconds: 5),
           ),
         );
       }
@@ -72,13 +97,32 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   }
 
   String _getErrorMessage(dynamic error) {
-    if (error.toString().contains('User already registered')) {
+    final errorString = error.toString().toLowerCase();
+    
+    if (errorString.contains('user already registered') || errorString.contains('already registered')) {
       return 'An account with this email already exists';
-    } else if (error.toString().contains('Password should be at least')) {
+    } else if (errorString.contains('password should be at least') || errorString.contains('password')) {
       return 'Password must be at least 8 characters with uppercase, lowercase, and number';
-    } else if (error.toString().contains('Invalid email')) {
+    } else if (errorString.contains('invalid email') || errorString.contains('email')) {
       return 'Please enter a valid email address';
+    } else if (errorString.contains('network') || errorString.contains('connection')) {
+      return 'Network error. Please check your connection and try again.';
+    } else if (errorString.contains('supabase is not initialized')) {
+      return 'Service not ready. Please refresh the page and try again.';
+    } else if (errorString.contains('rate limit') || errorString.contains('too many requests')) {
+      return 'Too many requests. Please wait a moment and try again.';
+    } else if (errorString.contains('email confirmation')) {
+      return 'Email confirmation is required. Please check your email.';
+    } else if (errorString.contains('weak password')) {
+      return 'Password is too weak. Please use a stronger password.';
+    } else if (errorString.contains('invalid credentials')) {
+      return 'Invalid credentials. Please check your information.';
     } else {
+      // Log the actual error for debugging
+      if (kDebugMode) {
+        print('🔍 Sign up error: $error');
+        print('🔍 Error string: $errorString');
+      }
       return 'Sign up failed. Please try again.';
     }
   }
@@ -448,6 +492,25 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                         fontFamily: 'Roboto',
                       ),
                       textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Additional guidance
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Colors.orange.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                      ),
+                      child: Text(
+                        'Important: You must confirm your email before you can sign in to your account.',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.orange[200],
+                          fontFamily: 'Roboto',
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     ),
                     const SizedBox(height: 32),
                     

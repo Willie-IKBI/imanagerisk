@@ -219,3 +219,4 @@ If you encounter issues:
 - [Flutter Supabase Package](https://pub.dev/packages/supabase_flutter)
 - [Supabase Dashboard](https://app.supabase.com)
 - [Environment Setup Guide](ENVIRONMENT_SETUP.md)
+

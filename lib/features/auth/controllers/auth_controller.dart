@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/supabase_service.dart';
+import '../../../core/env/env_config.dart';
 
 /// Authentication state notifier
 class AuthController extends StateNotifier<AsyncValue<User?>> {
@@ -12,6 +13,14 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
   Future<void> _initialize() async {
     state = const AsyncValue.loading();
     try {
+      // Try to initialize Supabase if not already initialized
+      if (!SupabaseService.isInitialized) {
+        if (EnvConfig.isDevelopment) {
+          print('🔧 AuthController: Initializing Supabase...');
+        }
+        await SupabaseService.initialize();
+      }
+      
       // Get current user
       final user = SupabaseService.currentUser;
       state = AsyncValue.data(user);
@@ -23,6 +32,11 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
         }
       });
     } catch (e, stackTrace) {
+      if (EnvConfig.isDevelopment) {
+        print('❌ AuthController: Initialization failed');
+        print('🔍 Error: $e');
+        print('🔍 Stack trace: $stackTrace');
+      }
       state = AsyncValue.error(e, stackTrace);
     }
   }
@@ -31,17 +45,29 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
   Future<void> signIn(String email, String password) async {
     state = const AsyncValue.loading();
     try {
+      if (EnvConfig.isDevelopment) {
+        print('🔐 AuthController: Attempting to sign in user: $email');
+      }
+      
       final response = await SupabaseService.signInWithEmail(
         email: email,
         password: password,
       );
       
       if (response.user != null) {
+        if (EnvConfig.isDevelopment) {
+          print('✅ AuthController: Sign in successful for ${response.user?.email}');
+        }
         state = AsyncValue.data(response.user);
       } else {
         throw Exception('Sign in failed: No user returned');
       }
     } catch (e, stackTrace) {
+      if (EnvConfig.isDevelopment) {
+        print('❌ AuthController: Sign in failed');
+        print('🔍 Error: $e');
+        print('🔍 Stack trace: $stackTrace');
+      }
       state = AsyncValue.error(e, stackTrace);
       rethrow;
     }
@@ -56,6 +82,10 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
   }) async {
     state = const AsyncValue.loading();
     try {
+      if (EnvConfig.isDevelopment) {
+        print('🔐 AuthController: Starting sign up process for $email');
+      }
+      
       final response = await SupabaseService.signUpWithEmail(
         email: email,
         password: password,
@@ -66,11 +96,32 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
       );
       
       if (response.user != null) {
-        state = AsyncValue.data(response.user);
+        if (EnvConfig.isDevelopment) {
+          print('✅ AuthController: Sign up successful for ${response.user?.email}');
+          print('📧 Email confirmation required: ${response.user?.emailConfirmedAt == null}');
+        }
+        
+        // Check if email confirmation is required
+        if (response.user!.emailConfirmedAt == null) {
+          if (EnvConfig.isDevelopment) {
+            print('📧 Email confirmation required - user will need to confirm email before signing in');
+          }
+          // Don't set the user state if email confirmation is required
+          // The user should confirm their email first
+          state = const AsyncValue.data(null);
+        } else {
+          // Email already confirmed, set the user state
+          state = AsyncValue.data(response.user);
+        }
       } else {
         throw Exception('Sign up failed: No user returned');
       }
     } catch (e, stackTrace) {
+      if (EnvConfig.isDevelopment) {
+        print('❌ AuthController: Sign up failed');
+        print('🔍 Error: $e');
+        print('🔍 Stack trace: $stackTrace');
+      }
       state = AsyncValue.error(e, stackTrace);
       rethrow;
     }
@@ -127,6 +178,11 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
     } catch (e) {
       return false;
     }
+  }
+
+  /// Retry initialization
+  Future<void> retryInitialization() async {
+    await _initialize();
   }
 }
 
