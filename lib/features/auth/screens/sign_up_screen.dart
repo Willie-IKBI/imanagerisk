@@ -101,6 +101,14 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   String _getErrorMessage(dynamic error) {
     final errorString = error.toString().toLowerCase();
     
+    // Log the full error details for debugging
+    if (kDebugMode) {
+      print('🔍 Full error object: $error');
+      print('🔍 Error string: $errorString');
+      print('🔍 Error type: ${error.runtimeType}');
+      print('🔍 Error hash: ${error.hashCode}');
+    }
+    
     if (errorString.contains('user already registered') || errorString.contains('already registered')) {
       return 'An account with this email already exists';
     } else if (errorString.contains('password should be at least') || errorString.contains('password')) {
@@ -129,6 +137,10 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       return 'Authentication service error. Please try again.';
     } else if (errorString.contains('http') || errorString.contains('status')) {
       return 'Connection error. Please check your internet and try again.';
+    } else if (errorString.contains('sign up failed') || errorString.contains('signup failed')) {
+      return 'Account creation failed. Please try again.';
+    } else if (errorString.contains('no user returned') || errorString.contains('user returned')) {
+      return 'Account creation failed. Please try again.';
     } else if (errorString.contains('exception') || errorString.contains('error')) {
       return 'An unexpected error occurred. Please try again.';
     } else {

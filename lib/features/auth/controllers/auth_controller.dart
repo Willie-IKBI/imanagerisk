@@ -127,7 +127,13 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
         print('🔍 Error string: ${e.toString()}');
         print('🔍 Stack trace: $stackTrace');
       }
-      state = AsyncValue.error(e, stackTrace);
+      
+      // Instead of setting error state and rethrowing, just set data(null)
+      // This prevents the global error UI from showing, since the sign-up screen
+      // handles its own error display
+      state = const AsyncValue.data(null);
+      
+      // Re-throw the error so the sign-up screen can catch it and show appropriate UI
       rethrow;
     }
   }
