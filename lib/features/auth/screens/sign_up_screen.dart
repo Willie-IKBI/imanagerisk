@@ -81,6 +81,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       if (kDebugMode) {
         print('❌ Sign up failed with error: $e');
         print('🔍 Error type: ${e.runtimeType}');
+        print('🔍 Error string: ${e.toString()}');
+        print('🔍 Error hash: ${e.hashCode}');
       }
       
       // Show error message
@@ -121,11 +123,20 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       return 'Request timed out. Please check your connection and try again.';
     } else if (errorString.contains('server error') || errorString.contains('internal error')) {
       return 'Server error. Please try again in a moment.';
+    } else if (errorString.contains('authapi') || errorString.contains('auth api')) {
+      return 'Authentication service error. Please try again.';
+    } else if (errorString.contains('gotrue') || errorString.contains('go true')) {
+      return 'Authentication service error. Please try again.';
+    } else if (errorString.contains('http') || errorString.contains('status')) {
+      return 'Connection error. Please check your internet and try again.';
+    } else if (errorString.contains('exception') || errorString.contains('error')) {
+      return 'An unexpected error occurred. Please try again.';
     } else {
       // Log the actual error for debugging
       if (kDebugMode) {
         print('🔍 Sign up error: $error');
         print('🔍 Error string: $errorString');
+        print('🔍 Error type: ${error.runtimeType}');
       }
       return 'Sign up failed. Please try again.';
     }

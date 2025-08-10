@@ -123,6 +123,8 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
       if (EnvConfig.isDevelopment) {
         print('❌ AuthController: Sign up failed');
         print('🔍 Error: $e');
+        print('🔍 Error type: ${e.runtimeType}');
+        print('🔍 Error string: ${e.toString()}');
         print('🔍 Stack trace: $stackTrace');
       }
       state = AsyncValue.error(e, stackTrace);
