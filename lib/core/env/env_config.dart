@@ -8,18 +8,42 @@ class EnvConfig {
   
   // Supabase Configuration
   static String get supabaseUrl {
-    // Use the same URL for both development and production
-    return 'https://gqwonqnhdcqksafucbmo.supabase.co';
+    // Try to get from environment variable first, fallback to hardcoded for development
+    const envUrl = String.fromEnvironment('SUPABASE_URL');
+    if (envUrl.isNotEmpty) {
+      return envUrl;
+    }
+    // Fallback for development only
+    if (kDebugMode) {
+      return 'https://gqwonqnhdcqksafucbmo.supabase.co';
+    }
+    throw Exception('SUPABASE_URL environment variable is required in production');
   }
 
   static String get supabaseAnonKey {
-    // Use the same key for both development and production
-    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MzIzMDcsImV4cCI6MjA3MDMwODMwN30.vMwsQxB51kRbAavHdZCfg4_H4LiL2PUAhXXHXApp0TA';
+    // Try to get from environment variable first, fallback to hardcoded for development
+    const envKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+    if (envKey.isNotEmpty) {
+      return envKey;
+    }
+    // Fallback for development only
+    if (kDebugMode) {
+      return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MzIzMDcsImV4cCI6MjA3MDMwODMwN30.vMwsQxB51kRbAavHdZCfg4_H4LiL2PUAhXXHXApp0TA';
+    }
+    throw Exception('SUPABASE_ANON_KEY environment variable is required in production');
   }
 
   static String get supabaseServiceKey {
-    // Use the same key for both development and production
-    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDczMjMwNywiZXhwIjoyMDcwMzA4MzA3fQ.0eg-XYAnuIjxhXvI6YL4pg-i4X4ihtSW2PgSmeoiXVw';
+    // Try to get from environment variable first, fallback to hardcoded for development
+    const envKey = String.fromEnvironment('SUPABASE_SERVICE_KEY');
+    if (envKey.isNotEmpty) {
+      return envKey;
+    }
+    // Fallback for development only
+    if (kDebugMode) {
+      return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDczMjMwNywiZXhwIjoyMDcwMzA4MzA3fQ.0eg-XYAnuIjxhXvI6YL4pg-i4X4ihtSW2PgSmeoiXVw';
+    }
+    throw Exception('SUPABASE_SERVICE_KEY environment variable is required in production');
   }
 
   // Environment detection

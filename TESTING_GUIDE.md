@@ -125,8 +125,8 @@ This guide will help you test the Supabase configuration and ensure everything i
 
 ```
 Environment Variables:
-- SUPABASE_URL: https://gqwonqnhdcqksafucbmo.supabase.co
-- SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+- SUPABASE_URL: https://your-project.supabase.co
+- SUPABASE_ANON_KEY: [YOUR_ANON_KEY_HERE]
 - ENVIRONMENT: development
 - APP_NAME: I Manage Risk
 - APP_VERSION: 1.0.0

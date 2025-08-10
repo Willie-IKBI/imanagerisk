@@ -53,6 +53,11 @@ app.*.map.json
 *.pem
 *.p12
 
+# Test files that might contain secrets
+test_supabase.dart
+*_test_secrets.dart
+*_with_keys.dart
+
 # Supabase
 .supabase/
 

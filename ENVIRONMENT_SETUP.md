@@ -212,13 +212,13 @@ Here's a complete example of how your environment should be configured:
 
 ```bash
 # Development
-flutter run --dart-define=SUPABASE_URL=https://abcdefghijklm.supabase.co \
-            --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... \
-            --dart-define=SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+flutter run --dart-define=SUPABASE_URL=https://your-project.supabase.co \
+            --dart-define=SUPABASE_ANON_KEY=[YOUR_ANON_KEY_HERE] \
+            --dart-define=SUPABASE_SERVICE_KEY=[YOUR_SERVICE_KEY_HERE]
 
 # Production
-flutter build web --dart-define=SUPABASE_URL=https://abcdefghijklm.supabase.co \
-                 --dart-define=SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+flutter build web --dart-define=SUPABASE_URL=https://your-project.supabase.co \
+                 --dart-define=SUPABASE_ANON_KEY=[YOUR_ANON_KEY_HERE]
 ```
 
 Remember to replace the example values with your actual Supabase project credentials!
