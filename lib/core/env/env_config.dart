@@ -8,33 +8,18 @@ class EnvConfig {
   
   // Supabase Configuration
   static String get supabaseUrl {
-    if (kDebugMode) {
-      // Development environment - use hardcoded values for now
-      return 'https://gqwonqnhdcqksafucbmo.supabase.co';
-    } else {
-      // Production environment
-      return const String.fromEnvironment(_supabaseUrlKey);
-    }
+    // Use the same URL for both development and production
+    return 'https://gqwonqnhdcqksafucbmo.supabase.co';
   }
 
   static String get supabaseAnonKey {
-    if (kDebugMode) {
-      // Development environment - use hardcoded values for now
-      return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MzIzMDcsImV4cCI6MjA3MDMwODMwN30.vMwsQxB51kRbAavHdZCfg4_H4LiL2PUAhXXHXApp0TA';
-    } else {
-      // Production environment
-      return const String.fromEnvironment(_supabaseAnonKeyKey);
-    }
+    // Use the same key for both development and production
+    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MzIzMDcsImV4cCI6MjA3MDMwODMwN30.vMwsQxB51kRbAavHdZCfg4_H4LiL2PUAhXXHXApp0TA';
   }
 
   static String get supabaseServiceKey {
-    if (kDebugMode) {
-      // Development environment - use hardcoded values for now
-      return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDczMjMwNywiZXhwIjoyMDcwMzA4MzA3fQ.0eg-XYAnuIjxhXvI6YL4pg-i4X4ihtSW2PgSmeoiXVw';
-    } else {
-      // Production environment
-      return const String.fromEnvironment(_supabaseServiceKeyKey);
-    }
+    // Use the same key for both development and production
+    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1NDczMjMwNywiZXhwIjoyMDcwMzA4MzA3fQ.0eg-XYAnuIjxhXvI6YL4pg-i4X4ihtSW2PgSmeoiXVw';
   }
 
   // Environment detection
