@@ -140,9 +140,13 @@ class SupabaseService {
         await initialize();
       }
       
+      // Log initialization status
       if (EnvConfig.isDevelopment) {
         print('🔐 Attempting to sign up user: $email');
         print('📊 Data: $data');
+        print('🔧 Supabase initialized: $isInitialized');
+        print('🔗 Supabase URL: ${EnvConfig.supabaseUrl}');
+        print('🔑 Anon Key length: ${EnvConfig.supabaseAnonKey.length}');
       }
       
       final response = await client.auth.signUp(
@@ -170,6 +174,8 @@ class SupabaseService {
         print('❌ Sign up failed: $e');
         print('🔍 Error type: ${e.runtimeType}');
         print('🔍 Error details: $e');
+        print('🔍 Error string: ${e.toString()}');
+        print('🔍 Error hash: ${e.hashCode}');
       }
       rethrow;
     }

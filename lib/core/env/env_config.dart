@@ -7,29 +7,25 @@ class EnvConfig {
   
   // Supabase Configuration
   static String get supabaseUrl {
-    // Try to get from environment variable first, fallback to hardcoded for development
+    // Try to get from environment variable first
     const envUrl = String.fromEnvironment('SUPABASE_URL');
     if (envUrl.isNotEmpty) {
       return envUrl;
     }
-    // Fallback for development only
-    if (kDebugMode) {
-      return 'https://gqwonqnhdcqksafucbmo.supabase.co';
-    }
-    throw Exception('SUPABASE_URL environment variable is required in production');
+    // Fallback to hardcoded values for both development and production
+    // This ensures the app works even if environment variables aren't set during build
+    return 'https://gqwonqnhdcqksafucbmo.supabase.co';
   }
 
   static String get supabaseAnonKey {
-    // Try to get from environment variable first, fallback to hardcoded for development
+    // Try to get from environment variable first
     const envKey = String.fromEnvironment('SUPABASE_ANON_KEY');
     if (envKey.isNotEmpty) {
       return envKey;
     }
-    // Fallback for development only
-    if (kDebugMode) {
-      return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MzIzMDcsImV4cCI6MjA3MDMwODMwN30.vMwsQxB51kRbAavHdZCfg4_H4LiL2PUAhXXHXApp0TA';
-    }
-    throw Exception('SUPABASE_ANON_KEY environment variable is required in production');
+    // Fallback to hardcoded values for both development and production
+    // This ensures the app works even if environment variables aren't set during build
+    return 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imdxd29ucW5oZGNxa3NhZnVjYm1vIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ3MzIzMDcsImV4cCI6MjA3MDMwODMwN30.vMwsQxB51kRbAavHdZCfg4_H4LiL2PUAhXXHXApp0TA';
   }
 
   // Service Role Key - REMOVED from client-side code for security

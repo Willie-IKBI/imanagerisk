@@ -109,6 +109,7 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       print('🔍 Error hash: ${error.hashCode}');
     }
     
+    // Check for specific error patterns
     if (errorString.contains('user already registered') || errorString.contains('already registered')) {
       return 'An account with this email already exists';
     } else if (errorString.contains('password should be at least') || errorString.contains('password')) {
@@ -141,6 +142,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
       return 'Account creation failed. Please try again.';
     } else if (errorString.contains('no user returned') || errorString.contains('user returned')) {
       return 'Account creation failed. Please try again.';
+    } else if (errorString.contains('environment variable') || errorString.contains('required in production')) {
+      return 'Configuration error. Please contact support.';
     } else if (errorString.contains('exception') || errorString.contains('error')) {
       return 'An unexpected error occurred. Please try again.';
     } else {
