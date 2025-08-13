@@ -269,13 +269,9 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
                     );
                   }
 
-                  // Load client data only once when client changes
+                  // Load client data directly if not loaded yet
                   if (!_clientDataLoaded) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      if (mounted) {
-                        _loadClientData(client);
-                      }
-                    });
+                    _loadClientData(client);
                   }
 
                   return Column(
