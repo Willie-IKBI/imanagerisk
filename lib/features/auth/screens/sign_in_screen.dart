@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import '../../../theme/theme.dart';
 import '../../../shared/widgets/widgets.dart';
 import '../controllers/auth_controller.dart';
-import 'sign_up_screen.dart';
 import 'package:flutter/foundation.dart';
 
 class SignInScreen extends ConsumerStatefulWidget {
@@ -165,12 +164,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                           hint: 'Enter your email',
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
-                          onChanged: (value) {
-                            // Auto-focus password field when email is entered
-                            if (value.isNotEmpty && _passwordController.text.isEmpty) {
-                              _passwordFocusNode.requestFocus();
-                            }
-                          },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Email is required';
@@ -190,12 +183,6 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                           hint: 'Enter your password',
                           obscureText: _obscurePassword,
                           textInputAction: TextInputAction.done,
-                          onChanged: (value) {
-                            // Auto-submit when password is entered and email exists
-                            if (value.isNotEmpty && _emailController.text.isNotEmpty) {
-                              _handleSignIn();
-                            }
-                          },
                           suffixIcon: IconButton(
                             icon: Icon(
                               _obscurePassword ? Icons.visibility : Icons.visibility_off,
@@ -235,8 +222,8 @@ class _SignInScreenState extends ConsumerState<SignInScreen> {
                                   _rememberMe = value ?? false;
                                 });
                               },
-                              fillColor: MaterialStateProperty.resolveWith(
-                                (states) => states.contains(MaterialState.selected)
+                              fillColor: WidgetStateProperty.resolveWith(
+                                (states) => states.contains(WidgetState.selected)
                                     ? context.brandOrange
                                     : Colors.transparent,
                               ),
