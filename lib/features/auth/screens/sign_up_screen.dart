@@ -21,13 +21,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
   
-  // Focus nodes for better UX
-  final _firstNameFocusNode = FocusNode();
-  final _lastNameFocusNode = FocusNode();
-  final _emailFocusNode = FocusNode();
-  final _passwordFocusNode = FocusNode();
-  final _confirmPasswordFocusNode = FocusNode();
-  
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
   bool _agreeToTerms = false;
@@ -40,11 +33,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
-    _firstNameFocusNode.dispose();
-    _lastNameFocusNode.dispose();
-    _emailFocusNode.dispose();
-    _passwordFocusNode.dispose();
-    _confirmPasswordFocusNode.dispose();
     super.dispose();
   }
 
@@ -301,12 +289,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           hint: 'Enter your first name',
                           controller: _firstNameController,
                           textInputAction: TextInputAction.next,
-                          onChanged: (value) {
-                            // Auto-focus last name when first name is entered
-                            if (value.isNotEmpty && _lastNameController.text.isEmpty) {
-                              _lastNameFocusNode.requestFocus();
-                            }
-                          },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'First name is required';
@@ -328,12 +310,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           hint: 'Enter your last name',
                           controller: _lastNameController,
                           textInputAction: TextInputAction.next,
-                          onChanged: (value) {
-                            // Auto-focus email when last name is entered
-                            if (value.isNotEmpty && _emailController.text.isEmpty) {
-                              _emailFocusNode.requestFocus();
-                            }
-                          },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Last name is required';
@@ -356,12 +332,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
                           textInputAction: TextInputAction.next,
-                          onChanged: (value) {
-                            // Auto-focus password when email is entered
-                            if (value.isNotEmpty && _passwordController.text.isEmpty) {
-                              _passwordFocusNode.requestFocus();
-                            }
-                          },
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Email is required';
@@ -381,12 +351,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           controller: _passwordController,
                           obscureText: _obscurePassword,
                           textInputAction: TextInputAction.next,
-                          onChanged: (value) {
-                            // Auto-focus confirm password when password is entered
-                            if (value.isNotEmpty && _confirmPasswordController.text.isEmpty) {
-                              _confirmPasswordFocusNode.requestFocus();
-                            }
-                          },
                           validator: _validatePassword,
                           suffixIcon: IconButton(
                             icon: Icon(
@@ -415,17 +379,6 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                           controller: _confirmPasswordController,
                           obscureText: _obscureConfirmPassword,
                           textInputAction: TextInputAction.done,
-                          onChanged: (value) {
-                            // Auto-submit when confirm password is entered and all fields are valid
-                            if (value.isNotEmpty && 
-                                _firstNameController.text.isNotEmpty &&
-                                _lastNameController.text.isNotEmpty &&
-                                _emailController.text.isNotEmpty &&
-                                _passwordController.text.isNotEmpty &&
-                                _agreeToTerms) {
-                              _handleSignUp();
-                            }
-                          },
                           validator: _validateConfirmPassword,
                           suffixIcon: IconButton(
                             icon: Icon(
@@ -458,8 +411,8 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                                   _agreeToTerms = value ?? false;
                                 });
                               },
-                              fillColor: MaterialStateProperty.resolveWith(
-                                (states) => states.contains(MaterialState.selected)
+                              fillColor: WidgetStateProperty.resolveWith(
+                                (states) => states.contains(WidgetState.selected)
                                     ? context.brandOrange
                                     : Colors.transparent,
                               ),
@@ -597,9 +550,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       Container(
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.orange.withOpacity(0.1),
+                          color: Colors.orange.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
-                          border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                          border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
                         ),
                         child: Text(
                           'Important: You must confirm your email before you can sign in to your account.',
