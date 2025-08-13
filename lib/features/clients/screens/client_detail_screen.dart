@@ -40,11 +40,21 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
   List<Map<String, dynamic>> _contacts = [];
   bool _isLoadingAddresses = false;
   bool _isLoadingContacts = false;
+  bool _clientDataLoaded = false;
 
   @override
   void initState() {
     super.initState();
     _loadAddressesAndContacts();
+  }
+
+  @override
+  void didUpdateWidget(ClientDetailScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.clientId != widget.clientId) {
+      _clientDataLoaded = false;
+      _loadAddressesAndContacts();
+    }
   }
 
   @override
@@ -83,6 +93,8 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
     _phoneController.text = client['phone'] ?? '';
     _alternativePhoneController.text = client['alternative_phone'] ?? '';
     _notesController.text = client['notes'] ?? '';
+    
+    _clientDataLoaded = true;
   }
 
   Future<void> _saveChanges() async {
@@ -257,12 +269,14 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
                     );
                   }
 
-                  // Load client data safely
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    if (mounted) {
-                      _loadClientData(client);
-                    }
-                  });
+                  // Load client data only once when client changes
+                  if (!_clientDataLoaded) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      if (mounted) {
+                        _loadClientData(client);
+                      }
+                    });
+                  }
 
                   return Column(
                     children: [
