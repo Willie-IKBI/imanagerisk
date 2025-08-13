@@ -53,16 +53,6 @@ class _IMRTextFieldState extends State<IMRTextField> {
   }
 
   @override
-  void didUpdateWidget(IMRTextField oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (widget.controller != oldWidget.controller) {
-      if (widget.controller != null) {
-        _controller = widget.controller!;
-      }
-    }
-  }
-
-  @override
   void dispose() {
     if (widget.controller == null) {
       _controller.dispose();
@@ -70,27 +60,15 @@ class _IMRTextFieldState extends State<IMRTextField> {
     super.dispose();
   }
 
-  void _handleChanged(String value) {
-    if (widget.onChanged != null) {
-      widget.onChanged!(value);
-    }
-  }
-
-  void _handleTap() {
-    if (widget.onTap != null) {
-      widget.onTap!();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: _controller,
+      controller: widget.controller ?? _controller,
       obscureText: widget.obscureText,
       keyboardType: widget.keyboardType,
       textInputAction: widget.textInputAction,
-      onTap: _handleTap,
-      onChanged: _handleChanged,
+      onTap: widget.onTap,
+      onChanged: widget.onChanged,
       validator: widget.validator,
       enabled: widget.enabled,
       maxLines: widget.maxLines,
