@@ -21,26 +21,14 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
   bool _isLoading = false;
   String? _error;
 
-  // Form controllers
-  final TextEditingController _firstNameController = TextEditingController();
-  final TextEditingController _lastNameController = TextEditingController();
-  final TextEditingController _idNumberController = TextEditingController();
-  final TextEditingController _companyNameController = TextEditingController();
-  final TextEditingController _registrationNumberController = TextEditingController();
-  final TextEditingController _vatNumberController = TextEditingController();
-  final TextEditingController _entityNameController = TextEditingController();
-  final TextEditingController _ssNumberController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
-  final TextEditingController _alternativePhoneController = TextEditingController();
-  final TextEditingController _notesController = TextEditingController();
+
 
   // Address and Contact data
   List<Map<String, dynamic>> _addresses = [];
   List<Map<String, dynamic>> _contacts = [];
   bool _isLoadingAddresses = false;
   bool _isLoadingContacts = false;
-  bool _clientDataLoaded = false;
+
 
   @override
   void initState() {
@@ -52,50 +40,13 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
   void didUpdateWidget(ClientDetailScreen oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.clientId != widget.clientId) {
-      _clientDataLoaded = false;
       _loadAddressesAndContacts();
     }
   }
 
-  @override
-  void dispose() {
-    _disposeControllers();
-    super.dispose();
-  }
 
-  void _disposeControllers() {
-    _firstNameController.dispose();
-    _lastNameController.dispose();
-    _idNumberController.dispose();
-    _companyNameController.dispose();
-    _registrationNumberController.dispose();
-    _vatNumberController.dispose();
-    _entityNameController.dispose();
-    _ssNumberController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _alternativePhoneController.dispose();
-    _notesController.dispose();
-  }
 
-  void _loadClientData(Map<String, dynamic> client) {
-    if (!mounted) return; // Prevent setting state if widget is disposed
-    
-    _firstNameController.text = client['first_name'] ?? '';
-    _lastNameController.text = client['last_name'] ?? '';
-    _idNumberController.text = client['id_number'] ?? '';
-    _companyNameController.text = client['company_name'] ?? '';
-    _registrationNumberController.text = client['registration_number'] ?? '';
-    _vatNumberController.text = client['vat_number'] ?? '';
-    _entityNameController.text = client['entity_name'] ?? '';
-    _ssNumberController.text = client['ss_number'] ?? '';
-    _emailController.text = client['email'] ?? '';
-    _phoneController.text = client['phone'] ?? '';
-    _alternativePhoneController.text = client['alternative_phone'] ?? '';
-    _notesController.text = client['notes'] ?? '';
-    
-    _clientDataLoaded = true;
-  }
+
 
   Future<void> _saveChanges() async {
     setState(() {
@@ -104,40 +55,20 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
     });
 
     try {
-      final clientData = {
-        'first_name': _firstNameController.text.trim(),
-        'last_name': _lastNameController.text.trim(),
-        'id_number': _idNumberController.text.trim(),
-        'company_name': _companyNameController.text.trim(),
-        'registration_number': _registrationNumberController.text.trim(),
-        'vat_number': _vatNumberController.text.trim(),
-        'entity_name': _entityNameController.text.trim(),
-        'ss_number': _ssNumberController.text.trim(),
-        'email': _emailController.text.trim(),
-        'phone': _phoneController.text.trim(),
-        'alternative_phone': _alternativePhoneController.text.trim(),
-        'notes': _notesController.text.trim(),
-      };
-
-      await ClientService.updateClient(widget.clientId, clientData);
-      
-      ref.invalidate(clientByIdProvider(widget.clientId));
-      ref.invalidate(allClientsProvider);
-      ref.invalidate(dashboardStatsProvider);
+      // For now, just show a message that editing is not implemented yet
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Edit functionality coming soon'),
+            backgroundColor: Theme.of(context).extension<IMRTokens>()!.brandOrange,
+          ),
+        );
+      }
       
       setState(() {
         _isEditing = false;
         _isLoading = false;
       });
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Client updated successfully'),
-            backgroundColor: Theme.of(context).extension<IMRTokens>()!.success,
-          ),
-        );
-      }
     } catch (e) {
       setState(() {
         _error = e.toString();
@@ -269,10 +200,7 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
                     );
                   }
 
-                  // Load client data directly if not loaded yet
-                  if (!_clientDataLoaded) {
-                    _loadClientData(client);
-                  }
+
 
                   return Column(
                     children: [
@@ -484,25 +412,25 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
             ),
             const SizedBox(height: 20),
             
-            // Client type specific fields
-            if (client['client_type'] == 'personal') ...[
-              _buildFormField('First Name', _firstNameController, enabled: _isEditing),
-              _buildFormField('Last Name', _lastNameController, enabled: _isEditing),
-              _buildFormField('ID Number', _idNumberController, enabled: _isEditing),
-            ] else if (client['client_type'] == 'business') ...[
-              _buildFormField('Company Name', _companyNameController, enabled: _isEditing),
-              _buildFormField('Registration Number', _registrationNumberController, enabled: _isEditing),
-              _buildFormField('VAT Number', _vatNumberController, enabled: _isEditing),
-            ] else if (client['client_type'] == 'bodyCorporate') ...[
-              _buildFormField('Entity Name', _entityNameController, enabled: _isEditing),
-              _buildFormField('SS Number', _ssNumberController, enabled: _isEditing),
-            ],
-            
-            // Common fields
-            _buildFormField('Email', _emailController, enabled: _isEditing),
-            _buildFormField('Phone', _phoneController, enabled: _isEditing),
-            _buildFormField('Alternative Phone', _alternativePhoneController, enabled: _isEditing),
-            _buildFormField('Notes', _notesController, enabled: _isEditing, maxLines: 3),
+                         // Client type specific fields
+             if (client['client_type'] == 'personal') ...[
+               _buildFormField('First Name', client['first_name'] ?? '', enabled: _isEditing),
+               _buildFormField('Last Name', client['last_name'] ?? '', enabled: _isEditing),
+               _buildFormField('ID Number', client['id_number'] ?? '', enabled: _isEditing),
+             ] else if (client['client_type'] == 'business') ...[
+               _buildFormField('Company Name', client['company_name'] ?? '', enabled: _isEditing),
+               _buildFormField('Registration Number', client['registration_number'] ?? '', enabled: _isEditing),
+               _buildFormField('VAT Number', client['vat_number'] ?? '', enabled: _isEditing),
+             ] else if (client['client_type'] == 'bodyCorporate') ...[
+               _buildFormField('Entity Name', client['entity_name'] ?? '', enabled: _isEditing),
+               _buildFormField('SS Number', client['ss_number'] ?? '', enabled: _isEditing),
+             ],
+             
+             // Common fields
+             _buildFormField('Email', client['email'] ?? '', enabled: _isEditing),
+             _buildFormField('Phone', client['phone'] ?? '', enabled: _isEditing),
+             _buildFormField('Alternative Phone', client['alternative_phone'] ?? '', enabled: _isEditing),
+             _buildFormField('Notes', client['notes'] ?? '', enabled: _isEditing, maxLines: 3),
             
             const SizedBox(height: 24),
             
@@ -552,7 +480,7 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
     );
   }
 
-  Widget _buildFormField(String label, TextEditingController controller, {bool enabled = false, int maxLines = 1}) {
+  Widget _buildFormField(String label, String value, {bool enabled = false, int maxLines = 1}) {
     final tokens = Theme.of(context).extension<IMRTokens>()!;
     
     return Padding(
@@ -568,10 +496,20 @@ class _ClientDetailScreenState extends ConsumerState<ClientDetailScreen> {
             ),
           ),
           const SizedBox(height: 4),
-          IMRTextField(
-            controller: controller,
-            enabled: enabled,
-            maxLines: maxLines,
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: enabled ? tokens.glassSurface.withValues(alpha: 0.1) : tokens.glassSurface.withValues(alpha: 0.05),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: tokens.glassBorder.withValues(alpha: 0.3)),
+            ),
+            child: Text(
+              value.isEmpty ? 'Not provided' : value,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: enabled ? tokens.pureWhite : tokens.pureWhite.withValues(alpha: 0.7),
+              ),
+            ),
           ),
         ],
       ),
