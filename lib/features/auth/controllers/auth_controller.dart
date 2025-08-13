@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/supabase_service.dart';
@@ -21,15 +22,34 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
         await SupabaseService.initialize();
       }
       
-      // Get current user
+      // Get current user and set initial state
       final user = SupabaseService.currentUser;
-      state = AsyncValue.data(user);
+      
+      if (EnvConfig.isDevelopment) {
+        print('🔍 AuthController: Current user = ${user?.email ?? 'null'}');
+        print('🔍 AuthController: About to set state...');
+      }
+      
+      try {
+        // Set initial state
+        state = AsyncValue.data(user);
+        
+        if (EnvConfig.isDevelopment) {
+          print('🔍 AuthController: State set successfully to AsyncValue.data(user)');
+        }
+      } catch (e) {
+        if (EnvConfig.isDevelopment) {
+          print('❌ AuthController: Failed to set state: $e');
+        }
+        state = const AsyncValue.data(null);
+      }
       
       // Listen to auth state changes
       SupabaseService.authStateChanges.listen((authState) {
-        if (!state.hasError) {
-          state = AsyncValue.data(authState.session?.user);
+        if (EnvConfig.isDevelopment) {
+          print('🔍 AuthController: Auth state changed - User = ${authState.session?.user?.email ?? 'null'}');
         }
+        state = AsyncValue.data(authState.session?.user);
       });
     } catch (e, stackTrace) {
       if (EnvConfig.isDevelopment) {
@@ -38,8 +58,7 @@ class AuthController extends StateNotifier<AsyncValue<User?>> {
         print('🔍 Stack trace: $stackTrace');
       }
       
-      // Instead of throwing an error, set the state to data(null) to allow the app to continue
-      // This prevents the app from showing an error screen when Supabase is just not ready yet
+      // Set the state to data(null) to allow the app to continue
       state = const AsyncValue.data(null);
     }
   }

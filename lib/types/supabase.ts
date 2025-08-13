@@ -1,30 +1,191 @@
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
+
 export type Database = {
+  // Allows to automatically instanciate createClient with right options
+  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
+  __InternalSupabase: {
+    PostgrestVersion: "13.0.4"
+  }
   public: {
     Tables: {
-      claim_updates: {
+      addresses: {
         Row: {
-          claim_id: string
-          created_at: string | null
+          address_notes: string | null
+          city: string
+          client_id: string
+          complex_name: string | null
+          country: string
+          created_at: string
           created_by: string | null
           id: string
-          update_text: string
-          updated_at: string | null
+          is_primary: boolean
+          line_1: string
+          line_2: string | null
+          postal_code: string
+          province: string
+          street_name: string | null
+          street_number: string | null
+          suburb: string | null
+          type: string
+          unit_number: string | null
+          updated_at: string
+        }
+        Insert: {
+          address_notes?: string | null
+          city: string
+          client_id: string
+          complex_name?: string | null
+          country?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_primary?: boolean
+          line_1: string
+          line_2?: string | null
+          postal_code: string
+          province: string
+          street_name?: string | null
+          street_number?: string | null
+          suburb?: string | null
+          type?: string
+          unit_number?: string | null
+          updated_at?: string
+        }
+        Update: {
+          address_notes?: string | null
+          city?: string
+          client_id?: string
+          complex_name?: string | null
+          country?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_primary?: boolean
+          line_1?: string
+          line_2?: string | null
+          postal_code?: string
+          province?: string
+          street_name?: string | null
+          street_number?: string | null
+          suburb?: string | null
+          type?: string
+          unit_number?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "addresses_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      attachments: {
+        Row: {
+          file_name: string
+          file_path: string
+          file_size: number
+          id: string
+          mime_type: string
+          parent_id: string
+          parent_type: string
+          uploaded_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          file_name: string
+          file_path: string
+          file_size: number
+          id?: string
+          mime_type: string
+          parent_id: string
+          parent_type: string
+          uploaded_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          file_name?: string
+          file_path?: string
+          file_size?: number
+          id?: string
+          mime_type?: string
+          parent_id?: string
+          parent_type?: string
+          uploaded_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: []
+      }
+      claim_items: {
+        Row: {
+          claim_id: string
+          created_at: string
+          description: string
+          id: string
+          quantity: number
+          total_amount: number
+          unit_price: number
         }
         Insert: {
           claim_id: string
-          created_at?: string | null
-          created_by?: string | null
+          created_at?: string
+          description: string
           id?: string
-          update_text: string
-          updated_at?: string | null
+          quantity?: number
+          total_amount: number
+          unit_price: number
         }
         Update: {
           claim_id?: string
-          created_at?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          quantity?: number
+          total_amount?: number
+          unit_price?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "claim_items_claim_id_fkey"
+            columns: ["claim_id"]
+            isOneToOne: false
+            referencedRelation: "claims"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      claim_updates: {
+        Row: {
+          claim_id: string
+          created_at: string
+          created_by: string | null
+          id: string
+          notes: string
+          status: Database["public"]["Enums"]["claim_status"]
+        }
+        Insert: {
+          claim_id: string
+          created_at?: string
           created_by?: string | null
           id?: string
-          update_text?: string
-          updated_at?: string | null
+          notes: string
+          status: Database["public"]["Enums"]["claim_status"]
+        }
+        Update: {
+          claim_id?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          notes?: string
+          status?: Database["public"]["Enums"]["claim_status"]
         }
         Relationships: [
           {
@@ -39,33 +200,45 @@ export type Database = {
       claims: {
         Row: {
           claim_number: string
-          created_at: string | null
+          claim_type: Database["public"]["Enums"]["claim_type"]
+          created_at: string
           created_by: string | null
+          date_incident: string | null
           date_reported: string
+          description: string
+          estimated_value: number | null
           id: string
           policy_id: string
-          status: Database["public"]["Enums"]["claim_status"] | null
-          updated_at: string | null
+          status: Database["public"]["Enums"]["claim_status"]
+          updated_at: string
         }
         Insert: {
           claim_number: string
-          created_at?: string | null
+          claim_type: Database["public"]["Enums"]["claim_type"]
+          created_at?: string
           created_by?: string | null
+          date_incident?: string | null
           date_reported: string
+          description: string
+          estimated_value?: number | null
           id?: string
           policy_id: string
-          status?: Database["public"]["Enums"]["claim_status"] | null
-          updated_at?: string | null
+          status?: Database["public"]["Enums"]["claim_status"]
+          updated_at?: string
         }
         Update: {
           claim_number?: string
-          created_at?: string | null
+          claim_type?: Database["public"]["Enums"]["claim_type"]
+          created_at?: string
           created_by?: string | null
+          date_incident?: string | null
           date_reported?: string
+          description?: string
+          estimated_value?: number | null
           id?: string
           policy_id?: string
-          status?: Database["public"]["Enums"]["claim_status"] | null
-          updated_at?: string | null
+          status?: Database["public"]["Enums"]["claim_status"]
+          updated_at?: string
         }
         Relationships: [
           {
@@ -75,60 +248,46 @@ export type Database = {
             referencedRelation: "policies"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "claims_policy_id_fkey"
-            columns: ["policy_id"]
-            isOneToOne: false
-            referencedRelation: "policy_summary"
-            referencedColumns: ["id"]
-          },
         ]
       }
       client_contacts: {
         Row: {
           client_id: string
-          created_at: string | null
+          created_at: string
           created_by: string | null
           email: string | null
           id: string
-          is_primary: boolean | null
+          is_primary: boolean
           name: string
           phone: string | null
-          role: string | null
-          updated_at: string | null
+          position: string | null
+          updated_at: string
         }
         Insert: {
           client_id: string
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
           email?: string | null
           id?: string
-          is_primary?: boolean | null
+          is_primary?: boolean
           name: string
           phone?: string | null
-          role?: string | null
-          updated_at?: string | null
+          position?: string | null
+          updated_at?: string
         }
         Update: {
           client_id?: string
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
           email?: string | null
           id?: string
-          is_primary?: boolean | null
+          is_primary?: boolean
           name?: string
           phone?: string | null
-          role?: string | null
-          updated_at?: string | null
+          position?: string | null
+          updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "client_contacts_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "client_summary"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "client_contacts_client_id_fkey"
             columns: ["client_id"]
@@ -136,271 +295,205 @@ export type Database = {
             referencedRelation: "clients"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "client_contacts_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "policy_summary"
-            referencedColumns: ["client_id"]
-          },
         ]
       }
       clients: {
         Row: {
+          alternative_phone: string | null
           client_type: Database["public"]["Enums"]["client_type"]
-          comments: string | null
           company_reg_number: string | null
-          created_at: string | null
+          created_at: string
           created_by: string | null
+          email: string | null
           entity_name: string | null
           first_name: string | null
           id: string
           id_number: string | null
           last_name: string | null
-          status: Database["public"]["Enums"]["client_status"] | null
-          updated_at: string | null
+          notes: string | null
+          phone: string | null
+          ss_number: string | null
+          status: Database["public"]["Enums"]["client_status"]
+          updated_at: string
           vat_number: string | null
         }
         Insert: {
+          alternative_phone?: string | null
           client_type: Database["public"]["Enums"]["client_type"]
-          comments?: string | null
           company_reg_number?: string | null
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
+          email?: string | null
           entity_name?: string | null
           first_name?: string | null
           id?: string
           id_number?: string | null
           last_name?: string | null
-          status?: Database["public"]["Enums"]["client_status"] | null
-          updated_at?: string | null
+          notes?: string | null
+          phone?: string | null
+          ss_number?: string | null
+          status?: Database["public"]["Enums"]["client_status"]
+          updated_at?: string
           vat_number?: string | null
         }
         Update: {
+          alternative_phone?: string | null
           client_type?: Database["public"]["Enums"]["client_type"]
-          comments?: string | null
           company_reg_number?: string | null
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
+          email?: string | null
           entity_name?: string | null
           first_name?: string | null
           id?: string
           id_number?: string | null
           last_name?: string | null
-          status?: Database["public"]["Enums"]["client_status"] | null
-          updated_at?: string | null
+          notes?: string | null
+          phone?: string | null
+          ss_number?: string | null
+          status?: Database["public"]["Enums"]["client_status"]
+          updated_at?: string
           vat_number?: string | null
         }
         Relationships: []
       }
       employees: {
         Row: {
-          contact_number: string | null
-          created_at: string | null
-          display_image: string | null
-          full_name: string
+          created_at: string
+          department: string | null
+          email: string
+          employee_number: string
+          first_name: string
+          hire_date: string
           id: string
-          role: string
-          updated_at: string | null
+          last_name: string
+          phone: string | null
+          role: Database["public"]["Enums"]["employee_role"]
+          status: string
+          updated_at: string
         }
         Insert: {
-          contact_number?: string | null
-          created_at?: string | null
-          display_image?: string | null
-          full_name: string
+          created_at?: string
+          department?: string | null
+          email: string
+          employee_number: string
+          first_name: string
+          hire_date: string
           id: string
-          role: string
-          updated_at?: string | null
+          last_name: string
+          phone?: string | null
+          role: Database["public"]["Enums"]["employee_role"]
+          status?: string
+          updated_at?: string
         }
         Update: {
-          contact_number?: string | null
-          created_at?: string | null
-          display_image?: string | null
-          full_name?: string
+          created_at?: string
+          department?: string | null
+          email?: string
+          employee_number?: string
+          first_name?: string
+          hire_date?: string
           id?: string
-          role?: string
-          updated_at?: string | null
+          last_name?: string
+          phone?: string | null
+          role?: Database["public"]["Enums"]["employee_role"]
+          status?: string
+          updated_at?: string
         }
         Relationships: []
       }
       insurers: {
         Row: {
-          contact_info: Json | null
-          created_at: string | null
+          code: string | null
+          created_at: string
+          email: string | null
           id: string
           name: string
-          updated_at: string | null
+          phone: string | null
+          status: string
+          updated_at: string
+          website: string | null
         }
         Insert: {
-          contact_info?: Json | null
-          created_at?: string | null
+          code?: string | null
+          created_at?: string
+          email?: string | null
           id?: string
           name: string
-          updated_at?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          website?: string | null
         }
         Update: {
-          contact_info?: Json | null
-          created_at?: string | null
+          code?: string | null
+          created_at?: string
+          email?: string | null
           id?: string
           name?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      interactions: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          description: string
-          id: string
-          interaction_type: string
-          parent_id: string
-          parent_type: string
-          subject: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          description: string
-          id?: string
-          interaction_type: string
-          parent_id: string
-          parent_type: string
-          subject?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          description?: string
-          id?: string
-          interaction_type?: string
-          parent_id?: string
-          parent_type?: string
-          subject?: string | null
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
-      leads: {
-        Row: {
-          client_type: Database["public"]["Enums"]["client_type"]
-          company_reg_number: string | null
-          contact_email: string | null
-          contact_phone: string | null
-          created_at: string | null
-          id: string
-          id_number: string | null
-          owner_id: string
-          product_interest: string | null
-          prospect_name: string
-          province: string | null
-          region: string | null
-          source: string | null
-          status: Database["public"]["Enums"]["lead_status"] | null
-          updated_at: string | null
-        }
-        Insert: {
-          client_type: Database["public"]["Enums"]["client_type"]
-          company_reg_number?: string | null
-          contact_email?: string | null
-          contact_phone?: string | null
-          created_at?: string | null
-          id?: string
-          id_number?: string | null
-          owner_id: string
-          product_interest?: string | null
-          prospect_name: string
-          province?: string | null
-          region?: string | null
-          source?: string | null
-          status?: Database["public"]["Enums"]["lead_status"] | null
-          updated_at?: string | null
-        }
-        Update: {
-          client_type?: Database["public"]["Enums"]["client_type"]
-          company_reg_number?: string | null
-          contact_email?: string | null
-          contact_phone?: string | null
-          created_at?: string | null
-          id?: string
-          id_number?: string | null
-          owner_id?: string
-          product_interest?: string | null
-          prospect_name: string
-          province?: string | null
-          region?: string | null
-          source?: string | null
-          status?: Database["public"]["Enums"]["lead_status"] | null
-          updated_at?: string | null
+          phone?: string | null
+          status?: string
+          updated_at?: string
+          website?: string | null
         }
         Relationships: []
       }
       policies: {
         Row: {
           client_id: string
-          created_at: string | null
+          created_at: string
           created_by: string | null
-          end_date: string | null
+          end_date: string
+          excess_amount: number | null
           id: string
           insurer_id: string
           policy_number: string
+          premium_amount: number
           product_id: string
-          renewal_flag: boolean | null
-          start_date: string | null
-          status: Database["public"]["Enums"]["policy_status"] | null
-          updated_at: string | null
+          renewal_flag: boolean
+          start_date: string
+          status: Database["public"]["Enums"]["policy_status"]
+          updated_at: string
         }
         Insert: {
           client_id: string
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
-          end_date?: string | null
+          end_date: string
+          excess_amount?: number | null
           id?: string
           insurer_id: string
           policy_number: string
+          premium_amount: number
           product_id: string
-          renewal_flag?: boolean | null
-          start_date?: string | null
-          status?: Database["public"]["Enums"]["policy_status"] | null
-          updated_at?: string | null
+          renewal_flag?: boolean
+          start_date: string
+          status?: Database["public"]["Enums"]["policy_status"]
+          updated_at?: string
         }
         Update: {
           client_id?: string
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
-          end_date?: string | null
+          end_date?: string
+          excess_amount?: number | null
           id?: string
           insurer_id?: string
           policy_number?: string
+          premium_amount?: number
           product_id?: string
-          renewal_flag?: boolean | null
-          start_date?: string | null
-          status?: Database["public"]["Enums"]["policy_status"] | null
-          updated_at?: string | null
+          renewal_flag?: boolean
+          start_date?: string
+          status?: Database["public"]["Enums"]["policy_status"]
+          updated_at?: string
         }
         Relationships: [
           {
             foreignKeyName: "policies_client_id_fkey"
             columns: ["client_id"]
             isOneToOne: false
-            referencedRelation: "client_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "policies_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
             referencedRelation: "clients"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "policies_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "policy_summary"
-            referencedColumns: ["client_id"]
           },
           {
             foreignKeyName: "policies_insurer_id_fkey"
@@ -420,25 +513,28 @@ export type Database = {
       }
       policy_covers: {
         Row: {
+          created_at: string
+          excess: number | null
           policy_id: string
-          premium: number | null
-          sum_insured: number | null
+          premium: number
+          sum_insured: number
           type_id: string
-          updated_at: string | null
         }
         Insert: {
+          created_at?: string
+          excess?: number | null
           policy_id: string
-          premium?: number | null
-          sum_insured?: number | null
+          premium: number
+          sum_insured: number
           type_id: string
-          updated_at?: string | null
         }
         Update: {
+          created_at?: string
+          excess?: number | null
           policy_id?: string
-          premium?: number | null
-          sum_insured?: number | null
+          premium?: number
+          sum_insured?: number
           type_id?: string
-          updated_at?: string | null
         }
         Relationships: [
           {
@@ -446,13 +542,6 @@ export type Database = {
             columns: ["policy_id"]
             isOneToOne: false
             referencedRelation: "policies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "policy_covers_policy_id_fkey"
-            columns: ["policy_id"]
-            isOneToOne: false
-            referencedRelation: "policy_summary"
             referencedColumns: ["id"]
           },
           {
@@ -466,34 +555,37 @@ export type Database = {
       }
       policy_endorsements: {
         Row: {
-          created_at: string | null
+          created_at: string
           created_by: string | null
           description: string
-          effective_date: string | null
-          endorsement_type: string
+          effective_date: string
+          endorsement_number: string
           id: string
           policy_id: string
-          updated_at: string | null
+          premium_adjustment: number
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
           description: string
-          effective_date?: string | null
-          endorsement_type: string
+          effective_date: string
+          endorsement_number: string
           id?: string
           policy_id: string
-          updated_at?: string | null
+          premium_adjustment?: number
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
           description?: string
-          effective_date?: string | null
-          endorsement_type?: string
+          effective_date?: string
+          endorsement_number?: string
           id?: string
           policy_id?: string
-          updated_at?: string | null
+          premium_adjustment?: number
+          updated_at?: string
         }
         Relationships: [
           {
@@ -503,63 +595,68 @@ export type Database = {
             referencedRelation: "policies"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "policy_endorsements_policy_id_fkey"
-            columns: ["policy_id"]
-            isOneToOne: false
-            referencedRelation: "policy_summary"
-            referencedColumns: ["id"]
-          },
         ]
       }
       policy_types: {
         Row: {
-          created_at: string | null
-          display_name: string
+          category: string
+          created_at: string
+          description: string | null
           id: string
+          name: string
           slug: string
-          updated_at: string | null
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
-          display_name: string
+          category: string
+          created_at?: string
+          description?: string | null
           id?: string
+          name: string
           slug: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
-          display_name?: string
+          category?: string
+          created_at?: string
+          description?: string | null
           id?: string
+          name?: string
           slug?: string
-          updated_at?: string | null
+          updated_at?: string
         }
         Relationships: []
       }
       products: {
         Row: {
-          created_at: string | null
+          category: string
+          created_at: string
           description: string | null
           id: string
           insurer_id: string
           name: string
-          updated_at: string | null
+          status: string
+          updated_at: string
         }
         Insert: {
-          created_at?: string | null
+          category: string
+          created_at?: string
           description?: string | null
           id?: string
           insurer_id: string
           name: string
-          updated_at?: string | null
+          status?: string
+          updated_at?: string
         }
         Update: {
-          created_at?: string | null
+          category?: string
+          created_at?: string
           description?: string | null
           id?: string
           insurer_id?: string
           name?: string
-          updated_at?: string | null
+          status?: string
+          updated_at?: string
         }
         Relationships: [
           {
@@ -571,301 +668,35 @@ export type Database = {
           },
         ]
       }
-      quote_options: {
-        Row: {
-          cover_summary: string | null
-          created_at: string | null
-          excess: number | null
-          id: string
-          insurer_id: string
-          is_selected: boolean | null
-          key_exclusions: string | null
-          premium: number
-          product_id: string
-          quote_id: string
-          updated_at: string | null
-        }
-        Insert: {
-          cover_summary?: string | null
-          created_at?: string | null
-          excess?: number | null
-          id?: string
-          insurer_id: string
-          is_selected?: boolean | null
-          key_exclusions?: string | null
-          premium: number
-          product_id: string
-          quote_id: string
-          updated_at?: string | null
-        }
-        Update: {
-          cover_summary?: string | null
-          created_at?: string | null
-          excess?: number | null
-          id?: string
-          insurer_id?: string
-          is_selected?: boolean | null
-          key_exclusions?: string | null
-          premium?: number
-          product_id?: string
-          quote_id?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "quote_options_insurer_id_fkey"
-            columns: ["insurer_id"]
-            isOneToOne: false
-            referencedRelation: "insurers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quote_options_product_id_fkey"
-            columns: ["product_id"]
-            isOneToOne: false
-            referencedRelation: "products"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quote_options_quote_id_fkey"
-            columns: ["quote_id"]
-            isOneToOne: false
-            referencedRelation: "quotes"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      quotes: {
-        Row: {
-          client_id: string | null
-          created_at: string | null
-          created_by: string | null
-          id: string
-          lead_id: string | null
-          quote_number: string
-          status: Database["public"]["Enums"]["quote_status"] | null
-          updated_at: string | null
-          valid_until: string | null
-        }
-        Insert: {
-          client_id?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          lead_id?: string | null
-          quote_number: string
-          status?: Database["public"]["Enums"]["quote_status"] | null
-          updated_at?: string | null
-          valid_until?: string | null
-        }
-        Update: {
-          client_id?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          lead_id?: string | null
-          quote_number?: string
-          status?: Database["public"]["Enums"]["quote_status"] | null
-          updated_at?: string | null
-          valid_until?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "quotes_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "client_summary"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quotes_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "clients"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "quotes_client_id_fkey"
-            columns: ["client_id"]
-            isOneToOne: false
-            referencedRelation: "policy_summary"
-            referencedColumns: ["client_id"]
-          },
-          {
-            foreignKeyName: "quotes_lead_id_fkey"
-            columns: ["lead_id"]
-            isOneToOne: false
-            referencedRelation: "leads"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      renewals: {
-        Row: {
-          created_at: string | null
-          created_by: string | null
-          id: string
-          notes: string | null
-          policy_id: string
-          premium_change: number | null
-          renewal_date: string
-          status: string | null
-          updated_at: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          notes?: string | null
-          policy_id: string
-          premium_change?: number | null
-          renewal_date: string
-          status?: string | null
-          updated_at?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          created_by?: string | null
-          id?: string
-          notes?: string | null
-          policy_id?: string
-          premium_change?: number | null
-          renewal_date?: string
-          status?: string | null
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "renewals_policy_id_fkey"
-            columns: ["policy_id"]
-            isOneToOne: false
-            referencedRelation: "policies"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "renewals_policy_id_fkey"
-            columns: ["policy_id"]
-            isOneToOne: false
-            referencedRelation: "policy_summary"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      tasks: {
-        Row: {
-          assigned_to: string | null
-          created_at: string | null
-          created_by: string | null
-          description: string | null
-          due_date: string | null
-          id: string
-          parent_id: string | null
-          parent_type: string | null
-          priority: Database["public"]["Enums"]["task_priority"] | null
-          status: Database["public"]["Enums"]["task_status"] | null
-          title: string
-          updated_at: string | null
-        }
-        Insert: {
-          assigned_to?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          description?: string | null
-          due_date?: string | null
-          id?: string
-          parent_id?: string | null
-          parent_type?: string | null
-          priority?: Database["public"]["Enums"]["task_priority"] | null
-          status?: Database["public"]["Enums"]["task_status"] | null
-          title: string
-          updated_at?: string | null
-        }
-        Update: {
-          assigned_to?: string | null
-          created_at?: string | null
-          created_by?: string | null
-          description?: string | null
-          due_date?: string | null
-          id?: string
-          parent_id?: string | null
-          parent_type?: string | null
-          priority?: Database["public"]["Enums"]["task_priority"] | null
-          status?: Database["public"]["Enums"]["task_status"] | null
-          title?: string
-          updated_at?: string | null
-        }
-        Relationships: []
-      }
     }
     Views: {
-      client_summary: {
-        Row: {
-          claim_count: number | null
-          client_type: Database["public"]["Enums"]["client_type"] | null
-          created_at: string | null
-          full_name: string | null
-          id: string | null
-          policy_count: number | null
-          status: Database["public"]["Enums"]["client_status"] | null
-        }
-        Relationships: []
-      }
-      dashboard_stats: {
-        Row: {
-          my_tasks: number | null
-          new_leads: number | null
-          open_claims: number | null
-          pending_quotes: number | null
-          renewals_due: number | null
-        }
-        Relationships: []
-      }
-      policy_summary: {
-        Row: {
-          client_id: string | null
-          client_name: string | null
-          end_date: string | null
-          id: string | null
-          insurer_name: string | null
-          policy_number: string | null
-          product_name: string | null
-          renewal_flag: boolean | null
-          start_date: string | null
-          status: Database["public"]["Enums"]["policy_status"] | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
-      generate_quote_number: {
-        Args: Record<PropertyKey, never>
-        Returns: string
+      can_access_client: {
+        Args: { client_id: string }
+        Returns: boolean
       }
-      get_client_full_name: {
-        Args: { client_record: Database["public"]["Tables"]["clients"]["Row"] }
-        Returns: string
+      has_role: {
+        Args: { role_name: string }
+        Returns: boolean
+      }
+      is_admin_or_manager: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_sales_role: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
       }
     }
     Enums: {
-      claim_status:
-        | "reported"
-        | "in_review"
-        | "approved"
-        | "declined"
-        | "settled"
-      client_status: "active" | "inactive"
+      claim_status: "open" | "in_progress" | "closed" | "rejected"
+      claim_type: "theft" | "accident" | "fire" | "flood" | "other"
+      client_status: "active" | "inactive" | "prospect"
       client_type: "personal" | "business" | "body_corporate"
-      lead_status:
-        | "new"
-        | "contacted"
-        | "qualifying"
-        | "quoting"
-        | "awaiting_docs"
-        | "decision"
-        | "won"
-        | "lost"
-      policy_status: "active" | "cancelled" | "pending"
-      quote_status: "draft" | "sent" | "accepted" | "declined" | "expired"
+      employee_role: "admin" | "manager" | "sales" | "claims" | "support"
+      policy_status: "active" | "expired" | "cancelled" | "pending"
       task_priority: "low" | "medium" | "high" | "urgent"
       task_status: "pending" | "in_progress" | "completed" | "cancelled"
     }
@@ -995,27 +826,12 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      claim_status: [
-        "reported",
-        "in_review",
-        "approved",
-        "declined",
-        "settled",
-      ],
-      client_status: ["active", "inactive"],
+      claim_status: ["open", "in_progress", "closed", "rejected"],
+      claim_type: ["theft", "accident", "fire", "flood", "other"],
+      client_status: ["active", "inactive", "prospect"],
       client_type: ["personal", "business", "body_corporate"],
-      lead_status: [
-        "new",
-        "contacted",
-        "qualifying",
-        "quoting",
-        "awaiting_docs",
-        "decision",
-        "won",
-        "lost",
-      ],
-      policy_status: ["active", "cancelled", "pending"],
-      quote_status: ["draft", "sent", "accepted", "declined", "expired"],
+      employee_role: ["admin", "manager", "sales", "claims", "support"],
+      policy_status: ["active", "expired", "cancelled", "pending"],
       task_priority: ["low", "medium", "high", "urgent"],
       task_status: ["pending", "in_progress", "completed", "cancelled"],
     },

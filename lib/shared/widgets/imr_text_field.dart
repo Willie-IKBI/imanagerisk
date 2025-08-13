@@ -4,7 +4,7 @@ import '../../theme/theme.dart';
 /// IMRTextField widget for consistent text input styling
 /// 
 /// This widget provides a glass-styled text field following the IMR design system.
-class IMRTextField extends StatelessWidget {
+class IMRTextField extends StatefulWidget {
   final String? label;
   final String? hint;
   final String? errorText;
@@ -41,18 +41,64 @@ class IMRTextField extends StatelessWidget {
   });
   
   @override
+  State<IMRTextField> createState() => _IMRTextFieldState();
+}
+
+class _IMRTextFieldState extends State<IMRTextField> {
+  late TextEditingController _controller;
+  bool _mounted = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller ?? TextEditingController();
+  }
+
+  @override
+  void didUpdateWidget(IMRTextField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Only update if the widget is still mounted
+    if (_mounted && widget.controller != oldWidget.controller) {
+      if (widget.controller != null) {
+        _controller = widget.controller!;
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    _mounted = false;
+    if (widget.controller == null) {
+      _controller.dispose();
+    }
+    super.dispose();
+  }
+
+  void _handleChanged(String value) {
+    if (_mounted && widget.onChanged != null) {
+      widget.onChanged!(value);
+    }
+  }
+
+  void _handleTap() {
+    if (_mounted && widget.onTap != null) {
+      widget.onTap!();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
-      obscureText: obscureText,
-      keyboardType: keyboardType,
-      textInputAction: textInputAction,
-      onTap: onTap,
-      onChanged: onChanged,
-      validator: validator,
-      enabled: enabled,
-      maxLines: maxLines,
-      maxLength: maxLength,
+      controller: _controller,
+      obscureText: widget.obscureText,
+      keyboardType: widget.keyboardType,
+      textInputAction: widget.textInputAction,
+      onTap: _handleTap,
+      onChanged: _handleChanged,
+      validator: widget.validator,
+      enabled: widget.enabled,
+      maxLines: widget.maxLines,
+      maxLength: widget.maxLength,
       style: const TextStyle(
         fontFamily: 'Roboto',
         fontSize: 14,
@@ -60,9 +106,9 @@ class IMRTextField extends StatelessWidget {
         color: Color(0xFFFFFFFF),
       ),
       decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        errorText: errorText,
+        labelText: widget.label,
+        hintText: widget.hint,
+        errorText: widget.errorText,
         filled: true,
         fillColor: const Color(0x1AFFFFFF),
         border: OutlineInputBorder(
@@ -98,44 +144,32 @@ class IMRTextField extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
           borderSide: const BorderSide(
             color: Color(0x4DFFFFFF),
-            width: 1,
           ),
         ),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
         labelStyle: const TextStyle(
           fontFamily: 'Roboto',
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: Color(0xFFFFFFFF),
+          color: Color(0xB3FFFFFF), // 70% opacity
         ),
         hintStyle: const TextStyle(
           fontFamily: 'Roboto',
           fontSize: 14,
           fontWeight: FontWeight.w400,
-          color: Color(0x99FFFFFF),
+          color: Color(0x80FFFFFF), // 50% opacity
         ),
-        suffixIcon: suffixIcon != null
-            ? Theme(
-                data: Theme.of(context).copyWith(
-                  iconTheme: const IconThemeData(
-                    color: Color(0xFFFFFFFF),
-                    size: 20,
-                  ),
-                ),
-                child: suffixIcon!,
-              )
-            : null,
-        prefixIcon: prefixIcon != null
-            ? Theme(
-                data: Theme.of(context).copyWith(
-                  iconTheme: const IconThemeData(
-                    color: Color(0xFFFFFFFF),
-                    size: 20,
-                  ),
-                ),
-                child: prefixIcon!,
-              )
-            : null,
+        errorStyle: const TextStyle(
+          fontFamily: 'Roboto',
+          fontSize: 12,
+          fontWeight: FontWeight.w400,
+          color: Color(0xFFD32F2F),
+        ),
+        suffixIcon: widget.suffixIcon,
+        prefixIcon: widget.prefixIcon,
       ),
     );
   }
