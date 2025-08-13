@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../theme/theme.dart';
 
 /// IMRTextField widget for consistent text input styling
 /// 
@@ -46,7 +45,6 @@ class IMRTextField extends StatefulWidget {
 
 class _IMRTextFieldState extends State<IMRTextField> {
   late TextEditingController _controller;
-  bool _mounted = true;
 
   @override
   void initState() {
@@ -57,8 +55,7 @@ class _IMRTextFieldState extends State<IMRTextField> {
   @override
   void didUpdateWidget(IMRTextField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Only update if the widget is still mounted
-    if (_mounted && widget.controller != oldWidget.controller) {
+    if (widget.controller != oldWidget.controller) {
       if (widget.controller != null) {
         _controller = widget.controller!;
       }
@@ -67,7 +64,6 @@ class _IMRTextFieldState extends State<IMRTextField> {
 
   @override
   void dispose() {
-    _mounted = false;
     if (widget.controller == null) {
       _controller.dispose();
     }
@@ -75,13 +71,13 @@ class _IMRTextFieldState extends State<IMRTextField> {
   }
 
   void _handleChanged(String value) {
-    if (_mounted && widget.onChanged != null) {
+    if (widget.onChanged != null) {
       widget.onChanged!(value);
     }
   }
 
   void _handleTap() {
-    if (_mounted && widget.onTap != null) {
+    if (widget.onTap != null) {
       widget.onTap!();
     }
   }
